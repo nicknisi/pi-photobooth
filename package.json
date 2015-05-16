@@ -1,0 +1,31 @@
+{
+  "name": "pi-photobooth",
+  "version": "1.0.0",
+  "description": "A Raspberry Pi powered photobooth with a server to display the images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicknisi/pi-photobooth.git"
+  },
+  "keywords": [
+    "pi",
+    "raspberry",
+    "node",
+    "python",
+    "photobooth"
+  ],
+  "author": "Nick Nisi",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/nicknisi/pi-photobooth/issues"
+  },
+  "homepage": "https://github.com/nicknisi/pi-photobooth#readme",
+  "dependencies": {
+    "express": "^4.12.3",
+    "jade": "^1.9.2",
+    "stylus": "^0.51.1"
+  }
+}

@@ -1,0 +1,11 @@
+extends ./layout.jade
+block title
+	title #glissmante Wedding Gallery
+
+block content
+	ul.photo-list
+		each photo in photos
+			li
+				a(href='/view/#{photo}')
+					+photo(photo)
+	a(href='/random') Random Photo

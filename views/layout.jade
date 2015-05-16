@@ -1,0 +1,14 @@
+// define a reusable photo mixin
+mixin photo(url)
+	div.photo
+		img(src='/photos/#{url}')
+doctype html
+
+// the default layout
+html
+	head
+		block title
+		link(rel='stylesheet', href='/stylesheets/main.css')
+	body
+		h1: a(href='/') #glissmante wedding gallery
+		block content
