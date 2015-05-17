@@ -3,9 +3,9 @@ block title
 	title #glissmante Wedding Gallery
 
 block content
+	a(href='/random') Random Photo
 	ul.photo-list
 		each photo in photos
 			li
 				a(href='/view/#{photo}')
 					+photo(photo)
-	a(href='/random') Random Photo
