@@ -6,6 +6,9 @@ BASEDIR=$(dirname $0)
 mkdir -p $BASEDIR/photos
 mkdir -p $BASEDIR/.photos
 
+# remove any existing photos that may exist in the temp directory
+rm $BASEDIR/.photos/*.jpg
+
 # give it a bit of time... 
 sleep 6
 

@@ -1,12 +1,12 @@
 import RPi.GPIO as GPIO
 import atexit
-from time import sleep
+from time import sleep, strftime
 import subprocess
 import pygame
 import os
 
 # variables
-transform_x = 640
+transform_x = 800
 transform_y = 480
 offset_x = 0
 offset_y = 0
@@ -14,6 +14,9 @@ offset_y = 0
 led_pin = 4
 button_pin = 17
 real_path = os.path.dirname(os.path.realpath(__file__))
+temp_dir = real_path + '/.photos'
+photos_dir = real_path + '/photos'
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(led_pin, GPIO.OUT);
@@ -77,40 +80,51 @@ def show_image(image_path):
 	screen.blit(img, (offset_x, offset_y))
 	pygame.display.flip()
 
-def snap(colo):
+def snap():
 	pics = 0
+	now = strftime('%Y-%m-%d-%H:%M:%S')
+
 	while pics < 4:
 		print('pose!')
 		show_image(real_path + '/images/pose.png')
-		sleep(1.5)
+		sleep(1)
 		blink(yellow, 5, 0.4)
 		blink(yellow, 5, 0.1)
 		print('SNAP')
 		setcolor(red)
-		gpout = subprocess.check_output('gphoto2 --capture-image-and-download --keep --filename /home/pi/code/pi-photobooth/.photos/photo%H%M%S.jpg', stderr=subprocess.STDOUT, shell=True)
+		filename = temp_dir + '/photo-' + now + '-' + `pics` + '.jpg'
+		print('filename: ' + filename)
+		gpout = subprocess.check_output('gphoto2 --capture-image-and-download --keep --filename ' + filename, stderr=subprocess.STDOUT, shell=True)
 		print(gpout)
 		if "ERROR" not in gpout:
 			print('SUCCESS!')
+			show_image(filename)
+			sleep(2)
 			pics += 1
 		else:
 			print(gpout)
+			blink([80, 0, 80], 5, 0.5)
 		# sleep(0.5)
 	# TODO: upload LED
 	print('assembling photo strip')
 	show_image(real_path + '/images/waiting.png')
-	assembleout = subprocess.check_output('sudo /home/pi/code/pi-photobooth/assemble_and_upload', shell=True)
+	photo = real_path + '/photos/' + now + '.jpg'
+	assembleout = subprocess.check_output('sudo ' + real_path + '/assemble_and_upload ' + photo, shell=True)
 	print(assembleout)
+	show_image(photo)
+	sleep(3)
 	setcolor(green)
 	show_image(real_path + '/images/ready.png')
 
 
-blink(red, 2, 1)
+# blink(red, 2, 1)
 setcolor(green)
 
-GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=snap, bouncetime=300)
+# GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=snap, bouncetime=300)
 
 show_image(real_path + '/images/ready.png')
 
 while True:
-	sleep(0.2)
-
+	if (GPIO.input(button_pin) != 1):
+		snap()
+		sleep(1)
