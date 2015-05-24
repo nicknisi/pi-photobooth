@@ -15,3 +15,11 @@ If this is running as a photobooth, potentially at a venue, you're not going to 
 ```shell
 /home/user/path/to/photobooth/start.sh &
 ```
+
+### Sync photos to a server running the node app
+
+I used rsync + cron to accomplish this. Run `crontab -e` and then add the following line:
+
+```shell
+rsync -az --ignore-existing /home/pi/code/pi-photobooth/photos/ user@server:/path/to/pi-photobooth/photos
+```

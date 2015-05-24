@@ -4,6 +4,7 @@ from time import sleep, strftime
 import subprocess
 import pygame
 import os
+import socket
 
 # variables
 transform_x = 800
@@ -13,6 +14,8 @@ offset_y = 0
 
 led_pin = 4
 button_pin = 17
+halt_pin = 4
+network_pin = 23
 real_path = os.path.dirname(os.path.realpath(__file__))
 temp_dir = real_path + '/.photos'
 photos_dir = real_path + '/photos'
@@ -21,6 +24,7 @@ photos_dir = real_path + '/photos'
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(led_pin, GPIO.OUT);
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection
+GPIO.setup(halt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # falling edge detection
 
 # setup rgb led
 red_pin = 12
@@ -30,6 +34,7 @@ blue_pin = 18
 GPIO.setup(red_pin, GPIO.OUT)
 GPIO.setup(green_pin, GPIO.OUT)
 GPIO.setup(blue_pin, GPIO.OUT)
+GPIO.setup(network_pin, GPIO.OUT)
 
 # setup the colors
 freq = 100 # hz
@@ -50,6 +55,20 @@ def cleanup():
 	print('Closing...')
 	GPIO.cleanup()
 atexit.register(cleanup)
+
+def reboot():
+	cleanup()
+	sleep(2)
+	os.system('sudo reboot')
+
+def is_connected():
+	try:
+		host = socket.gethostbyname('www.google.com')
+		s = socket.create_connection((host, 80), 2)
+		return True
+	except:
+		pass
+	return False
 
 def setcolor(color):
 	RED.ChangeDutyCycle(color[0])
@@ -122,9 +141,14 @@ setcolor(green)
 
 # GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=snap, bouncetime=300)
 
+# turn on the red light if we're not connected
+GPIO.output(network_pin, not is_connected())
+
 show_image(real_path + '/images/ready.png')
 
 while True:
 	if (GPIO.input(button_pin) != 1):
 		snap()
 		sleep(1)
+	elif (GPIO.input(halt_pin) != 1):
+		reboot()
