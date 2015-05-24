@@ -1,10 +1,13 @@
 $color1 = #A69576;
 $color2 = #F7E7CE;
 
+@import './grid';
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:300,400);
 
 body {
-	background-color: $color2;
+	margin: 0;
+	padding: 0;
+	background-color: #eff0f1;
 	color: $color1;
 	font-family: 'Ubuntu', sans-serif;
 }
@@ -12,6 +15,18 @@ body {
 a, a:link, a:visited {
 	text-decoration: none;
 	color: $color1;
+}
+
+#header {
+	width: 100%;
+	background-color: $color1;
+	height: 5rem;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	h1, h2, h1 a{
+		margin: 0;
+		color: $color2;
+	}
 }
 
 .photo {
