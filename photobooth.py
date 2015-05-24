@@ -2,9 +2,18 @@ import RPi.GPIO as GPIO
 import atexit
 from time import sleep
 import subprocess
+import pygame
+import os
+
+# variables
+transform_x = 640
+transform_y = 480
+offset_x = 0
+offset_y = 0
 
 led_pin = 4
 button_pin = 17
+real_path = os.path.dirname(os.path.realpath(__file__))
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(led_pin, GPIO.OUT);
@@ -54,10 +63,25 @@ def blink(color, numTimes, speed):
 		blankcolor()
 		sleep(speed)
 
+def init_pygame():
+	pygame.init()
+	size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+	pygame.display.set_caption('Photo Booth Pics')
+	pygame.mouse.set_visible(False)
+	return pygame.display.set_mode(size, pygame.FULLSCREEN)
+
+def show_image(image_path):
+	screen = init_pygame()
+	img = pygame.image.load(image_path)
+	img = pygame.transform.scale(img,(transform_x,transform_y))
+	screen.blit(img, (offset_x, offset_y))
+	pygame.display.flip()
+
 def snap(colo):
 	pics = 0
 	while pics < 4:
 		print('pose!')
+		show_image(real_path + '/images/pose.png')
 		sleep(1.5)
 		blink(yellow, 5, 0.4)
 		blink(yellow, 5, 0.1)
@@ -73,15 +97,19 @@ def snap(colo):
 		# sleep(0.5)
 	# TODO: upload LED
 	print('assembling photo strip')
+	show_image(real_path + '/images/waiting.png')
 	assembleout = subprocess.check_output('sudo /home/pi/code/pi-photobooth/assemble_and_upload', shell=True)
 	print(assembleout)
 	setcolor(green)
+	show_image(real_path + '/images/ready.png')
 
 
 blink(red, 2, 1)
 setcolor(green)
 
 GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=snap, bouncetime=300)
+
+show_image(real_path + '/images/ready.png')
 
 while True:
 	sleep(0.2)

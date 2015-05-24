@@ -6,7 +6,7 @@ SYNC_DIR=/home/pi/code/pi-photobooth/photos
 echo "resizing images"
 mogrify -resize 968x648 $TEMP_DIR/*.jpg
 echo "creating montage"
-montage $TEMP_DIR/*.jpg -tile 1x4 -geometry +10+10 $SYNC_DIR/montage5.jpg
+montage $TEMP_DIR/*.jpg -tile 2x2 -geometry +10+10 $SYNC_DIR/montage5.jpg
 echo "removing temp images"
 rm $TEMP_DIR/*.jpg
 echo "done"
