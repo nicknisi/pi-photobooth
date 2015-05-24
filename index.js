@@ -41,7 +41,7 @@ app.get('/random', function (req, res) {
 
 		var photo = photos[Math.floor(Math.random() * photos.length)];
 
-		res.render('view', { photo: photo });
+		res.render('view', { photo: photo, refresh: true });
 	});
 });
 

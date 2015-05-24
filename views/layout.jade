@@ -10,6 +10,8 @@ html
 		block title
 		link(rel='stylesheet', href='/stylesheets/main.css')
 		meta(name='viewport' content='width=device-width, initial-scale=1.0')
+		if refresh
+			meta(http-equiv='refresh' content='5')
 	body
 		h1: a(href='/') #glissmante wedding gallery
 		block content
