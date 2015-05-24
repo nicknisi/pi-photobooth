@@ -5,6 +5,7 @@ import subprocess
 import pygame
 import os
 import socket
+import threading
 
 # variables
 transform_x = 800
@@ -60,6 +61,14 @@ def reboot():
 	cleanup()
 	sleep(2)
 	os.system('sudo reboot')
+
+def set_interval(func, sec):
+	def func_wrapper():
+		set_interval(func, sec)
+		func()
+	t = threading.Timer(sec, func_wrapper)
+	t.start()
+	return t
 
 def is_connected():
 	try:
@@ -135,14 +144,18 @@ def snap():
 	setcolor(green)
 	show_image(real_path + '/images/ready.png')
 
+def check_connectivity():
+	# turn on the red light if we're not connected
+	GPIO.output(network_pin, not is_connected())
+
+set_interval(check_connectivity, 60)
+
+
 
 # blink(red, 2, 1)
 setcolor(green)
 
 # GPIO.add_event_detect(button_pin, GPIO.FALLING, callback=snap, bouncetime=300)
-
-# turn on the red light if we're not connected
-GPIO.output(network_pin, not is_connected())
 
 show_image(real_path + '/images/ready.png')
 
