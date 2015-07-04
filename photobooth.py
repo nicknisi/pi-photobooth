@@ -7,6 +7,8 @@ import os
 import socket
 import threading
 
+PIC_COUNT = 4
+
 # variables
 transform_x = 800
 transform_y = 480
@@ -19,7 +21,8 @@ halt_pin = 4
 network_pin = 23
 real_path = os.path.dirname(os.path.realpath(__file__))
 temp_dir = real_path + '/.photos'
-photos_dir = real_path + '/photos'
+# photos_dir = real_path + '/photos'
+photos_dir = '/media/usb/photos'
 
 
 GPIO.setmode(GPIO.BCM)
@@ -113,7 +116,7 @@ def snap():
 	pics = 0
 	now = strftime('%Y-%m-%d-%H:%M:%S')
 
-	while pics < 4:
+	while pics < PIC_COUNT:
 		print('pose!')
 		show_image(real_path + '/images/pose.png')
 		sleep(1)
@@ -137,7 +140,7 @@ def snap():
 	# TODO: upload LED
 	print('assembling photo strip')
 	show_image(real_path + '/images/waiting.png')
-	photo = real_path + '/photos/' + now + '.jpg'
+	photo = photos_dir + '/' + now + '.jpg'
 	assembleout = subprocess.check_output('sudo ' + real_path + '/assemble_and_upload ' + photo, shell=True)
 	print(assembleout)
 	show_image(photo)
