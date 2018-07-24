@@ -7,6 +7,7 @@ This is a photobooth app to combine a:
 2.)	A monitor (I used an older lcd with a dvi-to-hdmi cable
 3.)	An SLR camera (I used an older Canon XS with the kit lens, locked on manual exposure and in raw file output, but otherwise in auto mode)
 4.)	A Canon Selphy CP1200 photo printer (prints borderless 4x6’s for about $0.30 each)
+4.) An "easy" button that I soldered a wire to and plugged into the gpio pin 17 and ground
 
 My original idea was to shoot in raw+jpg as I wanted to keep the raw (.cr2) files from the camera for later editing, but I ran into an issue retrieving the resulting photo from gphoto2, so I switched to just raw and do the processing in the background while the pics are being taken.
 
